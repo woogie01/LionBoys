@@ -1,7 +1,7 @@
 package likelion.lionboys.domain.checkin;
 
 import jakarta.persistence.*;
-import likelion.lionboys.domain.Participant.Participant;
+import likelion.lionboys.domain.participant.Participant;
 import likelion.lionboys.domain.round.Round;
 import lombok.*;
 

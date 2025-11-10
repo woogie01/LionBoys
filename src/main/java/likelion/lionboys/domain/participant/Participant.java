@@ -1,4 +1,4 @@
-package likelion.lionboys.domain.Participant;
+package likelion.lionboys.domain.participant;
 
 import jakarta.persistence.*;
 import likelion.lionboys.domain.common.BaseTimeEntity;
