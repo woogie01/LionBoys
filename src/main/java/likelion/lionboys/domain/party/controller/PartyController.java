@@ -6,21 +6,22 @@ import jakarta.validation.Valid;
 import likelion.lionboys.domain.party.dto.CreatePartyReq;
 import likelion.lionboys.domain.party.dto.CreatePartyResp;
 import likelion.lionboys.domain.party.service.PartyService;
+import likelion.lionboys.domain.round.dto.CreateRoundReq;
+import likelion.lionboys.domain.round.dto.CreateRoundResp;
+import likelion.lionboys.domain.round.service.RoundService;
 import likelion.lionboys.global.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/party")
-@Tag(name = "Party API", description = "Party 생성 및 조회")
+@Tag(name = "Party API")
 public class PartyController {
     private final PartyService partyService;
+    private final RoundService roundService;
 
     @Operation(summary = "Party 생성")
     @PostMapping
@@ -30,6 +31,23 @@ public class PartyController {
                 .fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(resp.partyId())
+                .toUri();
+
+        return ResponseEntity.created(location)
+                .body(ApiResponse.success(resp));
+    }
+
+    @Operation(summary = "Party 차수 추가")
+    @PostMapping("/{partyId}/round")
+    public ResponseEntity<ApiResponse<CreateRoundResp>> createRound(
+            @PathVariable Long partyId,
+            @Valid @RequestBody CreateRoundReq req
+    ) {
+        var resp = roundService.createRound(partyId, req);
+        var location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{roundId}")
+                .buildAndExpand(resp.roundId())
                 .toUri();
 
         return ResponseEntity.created(location)
