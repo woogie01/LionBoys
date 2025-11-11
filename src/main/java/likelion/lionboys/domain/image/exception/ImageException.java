@@ -1,0 +1,20 @@
+package likelion.lionboys.domain.image.exception;
+
+import likelion.lionboys.domain.image.exception.error.ImageErrorCode;
+import likelion.lionboys.global.exception.CustomException;
+
+public class ImageException extends CustomException {
+    public ImageException(ImageErrorCode code) {
+        super(code);
+    }
+    public ImageException(ImageErrorCode code,  String message) {
+        super(code, message);
+    }
+
+    public static ImageException imageNotFound(Long roundId) {
+        return new ImageException(
+                ImageErrorCode.IMAGE_NOT_FOUND,
+                "해당 라운드(" + roundId + ")의 이미지를 찾을 수 없습니다."
+                );
+    }
+}
