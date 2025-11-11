@@ -18,7 +18,7 @@ public class Image extends BaseTimeEntity {
     @Column(nullable = false, length = 20)
     private UploadStatus uploadStatus;
 
-    @Enumerated(EnumType.STRING)  // ← 중요!
+    @Enumerated(EnumType.STRING)
     @Column(length = 20)
     private ContentType contentType;  // DB에 'JPEG', 'PNG' 저장됨
 }
