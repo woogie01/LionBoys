@@ -1,5 +1,6 @@
 package likelion.lionboys.domain.party.service;
 
+import likelion.lionboys.domain.auth.security.JwtProvider;
 import likelion.lionboys.domain.checkin.Checkin;
 import likelion.lionboys.domain.checkin.repository.CheckinRepository;
 import likelion.lionboys.domain.participant.Account;
@@ -28,6 +29,7 @@ public class PartyService {
     private final ParticipantRepository participantRepo;
     private final AccountRepository accountRepo;
     private final CheckinRepository checkinRepo;
+    private final JwtProvider jwtProvider;
 
     @Transactional
     public CreatePartyResp createPartyWithFirstRound(CreatePartyReq req) {
@@ -56,6 +58,9 @@ public class PartyService {
                 .build();
         participantRepo.save(host);
 
+        String accessToken = jwtProvider.createAccessToken(host.getId(), host.getRole().name());
+        String refreshToken = jwtProvider.createRefreshToken(host.getId());
+
         // 4. 총무를 1차 자동 체크인
         Checkin checkin = Checkin.builder()
                 .round(round1)
@@ -76,7 +81,9 @@ public class PartyService {
                 party.getId(),
                 party.getTitle(),
                 party.getEventDate(),
-                round1.getPlaceName()
+                round1.getPlaceName(),
+                accessToken,
+                refreshToken
         );
     }
 }

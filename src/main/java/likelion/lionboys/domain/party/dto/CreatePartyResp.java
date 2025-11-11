@@ -9,6 +9,8 @@ public record CreatePartyResp(
         Long partyId,
         String title,
         LocalDateTime eventDate,
-        String placeName
+        String placeName,
+        String accessToken,
+        String refreshToken
 ) {
 }
