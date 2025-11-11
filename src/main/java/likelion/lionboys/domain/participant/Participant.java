@@ -33,4 +33,9 @@ public class Participant extends BaseTimeEntity {
     @Column(length = 30, nullable = false)
     private String phone;
 
+    @Enumerated(EnumType.STRING)
+    @Column(length = 16, nullable = false)
+    @Builder.Default
+    private Role role = Role.MEMBER;
+
 }
