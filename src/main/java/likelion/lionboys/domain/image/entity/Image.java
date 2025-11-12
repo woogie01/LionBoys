@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import likelion.lionboys.domain.common.BaseTimeEntity;
 import likelion.lionboys.domain.image.exception.ImageException;
 import likelion.lionboys.domain.image.exception.error.ImageErrorCode;
+import likelion.lionboys.domain.party.Party;
+import likelion.lionboys.domain.round.Round;
 
 @Table(name = "images",
 indexes = @Index(name = "idx_s3_key", columnList = "s3key"))
@@ -28,6 +30,11 @@ public class Image extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
     private ContentType contentType;  // DB에 'JPEG', 'PNG' 저장됨
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "round_id", nullable = false,
+            foreignKey = @ForeignKey(name = "fk_round_party"))
+    private Round round;
 
     /*
     업로드 처리 완료

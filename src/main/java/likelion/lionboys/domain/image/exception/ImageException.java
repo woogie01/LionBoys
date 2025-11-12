@@ -17,4 +17,11 @@ public class ImageException extends CustomException {
                 "해당 라운드(" + roundId + ")의 이미지를 찾을 수 없습니다."
                 );
     }
+
+    public static ImageException invalidextension(String extention) {
+        return new ImageException(
+                ImageErrorCode.INVALID_IMAGE_TYPE,
+                "해당 타입(" + extention + ")은 잘못된 이미지 타입입니댜."
+        );
+    }
 }

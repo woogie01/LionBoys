@@ -1,5 +1,6 @@
 package likelion.lionboys.domain.image.entity;
 
+import likelion.lionboys.domain.image.exception.ImageException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -23,9 +24,7 @@ public enum ContentType {
         return Arrays.stream(values())
                 .filter(type -> type.mimeType.equalsIgnoreCase(mimeType))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "지원하지 않는 이미지 타입입니다: " + mimeType
-                ));
+                .orElseThrow(() -> ImageException.invalidextension(mimeType));
     }
 
     /**
