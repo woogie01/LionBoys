@@ -31,7 +31,7 @@ public class RoundService {
     private final CheckinRepository checkinRepo;
 
     @Transactional
-    public CreateRoundResp createRound(Long partyId, CreateRoundReq req, Long secretaryId) {
+    public CreateRoundResp createRound(Long partyId, CreateRoundReq req, Long myId) {
         // 1. 파티 존재 확인
         Party party = partyRepo.findById(partyId)
                 .orElseThrow(() -> new CustomException(GlobalErrorCode.NOT_FOUND, "파티를 찾을 수 없습니다."));
@@ -50,7 +50,7 @@ public class RoundService {
         roundRepo.save(round);
 
         // 4. 총무 체크인
-        Participant sec = participantRepo.findById(secretaryId)
+        Participant sec = participantRepo.findById(myId)
                 .orElseThrow(() -> new CustomException(GlobalErrorCode.NOT_FOUND, "총무를 찾을 수 없습니다."));
         if (!checkinRepo.existsByRoundIdAndParticipantId(round.getId(), sec.getId())) {
             var checkin = Checkin.builder()

@@ -3,6 +3,8 @@ package likelion.lionboys.domain.party.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import likelion.lionboys.domain.checkin.dto.CheckinResp;
+import likelion.lionboys.domain.checkin.service.CheckinService;
 import likelion.lionboys.domain.participant.dto.SignUpReq;
 import likelion.lionboys.domain.participant.dto.SignUpResp;
 import likelion.lionboys.domain.round.dto.SetSecretaryReq;
@@ -29,6 +31,7 @@ public class PartyController {
     private final PartyService partyService;
     private final ParticipantService participantService;
     private final RoundService roundService;
+    private final CheckinService checkinService;
 
     @Operation(summary = "Party 생성")
     @PostMapping
@@ -66,9 +69,9 @@ public class PartyController {
     public ResponseEntity<ApiResponse<CreateRoundResp>> createRound(
             @PathVariable Long partyId,
             @Valid @RequestBody CreateRoundReq req,
-            @CurrentParticipantId Long secretaryId
+            @CurrentParticipantId Long myId
     ) {
-        var resp = roundService.createRound(partyId, req, secretaryId);
+        var resp = roundService.createRound(partyId, req, myId);
         var location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{roundId}")
@@ -80,13 +83,24 @@ public class PartyController {
     }
 
     @Operation(summary = "Round 총무 지정")
-    @PutMapping("/{partyId}/round/{roundId}")
+    @PutMapping("/{partyId}/round/{roundId}/secretary")
     public ResponseEntity<ApiResponse<SetSecretaryResp>> updateSecretary(
             @PathVariable Long partyId,
             @PathVariable Long roundId,
             @Valid @RequestBody SetSecretaryReq req
     ) {
         var resp = roundService.setSecretary(partyId, roundId, req);
+        return ResponseEntity.ok(ApiResponse.success(resp));
+    }
+
+    @Operation(summary = "Round 체크인")
+    @PostMapping("/{partyId}/round/{roundId}/checkin")
+    public ResponseEntity<ApiResponse<CheckinResp>> checkinSelf(
+            @PathVariable Long partyId,
+            @PathVariable Long roundId,
+            @CurrentParticipantId Long myId
+    ) {
+        var resp = checkinService.checkin(partyId, roundId, myId);
         return ResponseEntity.ok(ApiResponse.success(resp));
     }
 
