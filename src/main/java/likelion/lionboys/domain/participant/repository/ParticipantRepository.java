@@ -8,4 +8,8 @@ import java.util.Optional;
 
 public interface ParticipantRepository extends JpaRepository<Participant, Long> {
     Optional<Participant> findByRole(Role role);
+
+    boolean existsByIdAndPartyId(Long participantId, Long partyId);
+
+    Optional<Participant> findByIdAndPartyId(Long participantId, Long partyId);
 }

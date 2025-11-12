@@ -57,6 +57,7 @@ public class PartyService {
                 .role(Role.SECRETARY)
                 .build();
         participantRepo.save(host);
+        round1.registerSecretary(host);
 
         String accessToken = jwtProvider.createAccessToken(host.getId(), host.getRole().name());
         String refreshToken = jwtProvider.createRefreshToken(host.getId());

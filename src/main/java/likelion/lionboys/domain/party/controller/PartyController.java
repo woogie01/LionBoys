@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import likelion.lionboys.domain.participant.dto.SignUpReq;
 import likelion.lionboys.domain.participant.dto.SignUpResp;
+import likelion.lionboys.domain.round.dto.SetSecretaryReq;
+import likelion.lionboys.domain.round.dto.SetSecretaryResp;
 import likelion.lionboys.domain.participant.service.ParticipantService;
 import likelion.lionboys.domain.party.dto.CreatePartyReq;
 import likelion.lionboys.domain.party.dto.CreatePartyResp;
@@ -13,6 +15,7 @@ import likelion.lionboys.domain.round.dto.CreateRoundReq;
 import likelion.lionboys.domain.round.dto.CreateRoundResp;
 import likelion.lionboys.domain.round.service.RoundService;
 import likelion.lionboys.global.response.ApiResponse;
+import likelion.lionboys.global.support.CurrentParticipantId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -62,9 +65,10 @@ public class PartyController {
     @PostMapping("/{partyId}/round")
     public ResponseEntity<ApiResponse<CreateRoundResp>> createRound(
             @PathVariable Long partyId,
-            @Valid @RequestBody CreateRoundReq req
+            @Valid @RequestBody CreateRoundReq req,
+            @CurrentParticipantId Long secretaryId
     ) {
-        var resp = roundService.createRound(partyId, req);
+        var resp = roundService.createRound(partyId, req, secretaryId);
         var location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{roundId}")
@@ -73,6 +77,17 @@ public class PartyController {
 
         return ResponseEntity.created(location)
                 .body(ApiResponse.success(resp));
+    }
+
+    @Operation(summary = "Round 총무 지정")
+    @PutMapping("/{partyId}/round/{roundId}")
+    public ResponseEntity<ApiResponse<SetSecretaryResp>> updateSecretary(
+            @PathVariable Long partyId,
+            @PathVariable Long roundId,
+            @Valid @RequestBody SetSecretaryReq req
+    ) {
+        var resp = roundService.setSecretary(partyId, roundId, req);
+        return ResponseEntity.ok(ApiResponse.success(resp));
     }
 
 }
