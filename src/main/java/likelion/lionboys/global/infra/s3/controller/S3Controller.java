@@ -1,10 +1,10 @@
-package likelion.lionboys.domain.image.controller;
+package likelion.lionboys.global.infra.s3.controller;
 
 import jakarta.validation.Valid;
 import likelion.lionboys.domain.image.dto.ConfirmUploadReq;
 import likelion.lionboys.domain.image.dto.ConfirmUploadResp;
-import likelion.lionboys.domain.image.dto.UploadImageReq;
-import likelion.lionboys.domain.image.dto.UploadImageResp;
+import likelion.lionboys.global.infra.s3.dto.PresignedUrlReq;
+import likelion.lionboys.global.infra.s3.dto.PresignedUrlResp;
 import likelion.lionboys.global.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/images")
 @RestController
-public class ImageController {
+public class S3Controller {
 
     @PostMapping("/presigned-url")
-    ApiResponse<UploadImageResp> upload(
-            @RequestBody @Valid UploadImageReq req
+    ApiResponse<PresignedUrlResp> upload(
+            @RequestBody @Valid PresignedUrlReq req
     ) {
         return null;
     }

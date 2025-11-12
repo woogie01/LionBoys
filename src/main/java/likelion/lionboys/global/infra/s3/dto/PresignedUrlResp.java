@@ -1,11 +1,10 @@
-package likelion.lionboys.domain.image.dto;
+package likelion.lionboys.global.infra.s3.dto;
 
 // presigned URL 응답 DTO
-public record UploadImageResp(
-        Long imageId,
+public record PresignedUrlResp(
         String presignedUrl,
         Integer expiresIn,
+        String method,
         String s3Key
 ) {
-
 }
