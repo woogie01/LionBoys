@@ -2,8 +2,10 @@ package likelion.lionboys.domain.party.service;
 
 import likelion.lionboys.domain.checkin.Checkin;
 import likelion.lionboys.domain.checkin.repository.CheckinRepository;
+import likelion.lionboys.domain.participant.Account;
 import likelion.lionboys.domain.participant.Participant;
 import likelion.lionboys.domain.participant.Role;
+import likelion.lionboys.domain.participant.repository.AccountRepository;
 import likelion.lionboys.domain.participant.repository.ParticipantRepository;
 import likelion.lionboys.domain.party.Party;
 import likelion.lionboys.domain.party.dto.CreatePartyReq;
@@ -24,6 +26,7 @@ public class PartyService {
     private final PartyRepository partyRepo;
     private final RoundRepository roundRepo;
     private final ParticipantRepository participantRepo;
+    private final AccountRepository accountRepo;
     private final CheckinRepository checkinRepo;
 
     @Transactional
@@ -61,7 +64,16 @@ public class PartyService {
                 .build();
         checkinRepo.save(checkin);
 
+        // 5. 총무 계좌 등록
+        Account account = Account.builder()
+                .participant(host)
+                .bankName(req.bankName())
+                .accountNumber(req.accountNumber())
+                .build();
+        accountRepo.save(account);
+
         return new CreatePartyResp(
+                party.getId(),
                 party.getTitle(),
                 party.getEventDate(),
                 round1.getPlaceName()
