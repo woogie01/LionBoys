@@ -3,6 +3,9 @@ package likelion.lionboys.domain.party.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import likelion.lionboys.domain.participant.dto.SignUpReq;
+import likelion.lionboys.domain.participant.dto.SignUpResp;
+import likelion.lionboys.domain.participant.service.ParticipantService;
 import likelion.lionboys.domain.party.dto.CreatePartyReq;
 import likelion.lionboys.domain.party.dto.CreatePartyResp;
 import likelion.lionboys.domain.party.service.PartyService;
@@ -21,6 +24,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @Tag(name = "Party API")
 public class PartyController {
     private final PartyService partyService;
+    private final ParticipantService participantService;
     private final RoundService roundService;
 
     @Operation(summary = "Party 생성")
@@ -29,8 +33,25 @@ public class PartyController {
         var resp = partyService.createPartyWithFirstRound(req);
         var location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
-                .path("/{id}")
+                .path("/{partyId}")
                 .buildAndExpand(resp.partyId())
+                .toUri();
+
+        return ResponseEntity.created(location)
+                .body(ApiResponse.success(resp));
+    }
+
+    @Operation(summary = "Party 참가")
+    @PostMapping("/{partyId}/join")
+    public ResponseEntity<ApiResponse<SignUpResp>> joinParty(
+            @PathVariable Long partyId,
+            @Valid @RequestBody SignUpReq req
+    ) {
+        var resp = participantService.signUp(partyId, req);
+        var location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{participantId}")
+                .buildAndExpand(resp.participantId())
                 .toUri();
 
         return ResponseEntity.created(location)
