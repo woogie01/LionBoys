@@ -14,7 +14,9 @@ public record UserDetailsImpl(
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + role));
+        String r = (role == null) ? "MEMBER" : role;
+        String withPrefix = r.startsWith("ROLE_") ? r : "ROLE_" + r;
+        return List.of(new SimpleGrantedAuthority(withPrefix));
     }
 
     @Override
