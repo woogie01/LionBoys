@@ -14,3 +14,15 @@ spring:
         show_sql: true
         format_sql: true
     open-in-view: false
+
+aws:
+  credentials:
+    access-key: ${AWS_ACCESS_KEY}
+    secret-key: ${AWS_SECRET_KEY}
+  region: ${AWS_REGION}
+  s3:
+    bucket: ${AWS_S3_BUCKET}
+    presigned-url:
+      upload-expiration-minutes: 10
+      download-expiration-days: 7
+    max-file-size: 10485760
