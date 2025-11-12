@@ -1,4 +1,4 @@
-package likelion.lionboys.global.infra.s3.exception;
+package likelion.lionboys.global.infra.s3.exception.error;
 
 import likelion.lionboys.global.exception.error.ErrorCode;
 import lombok.Getter;

@@ -1,6 +1,7 @@
 package likelion.lionboys.global.infra.s3.exception;
 
 import likelion.lionboys.global.exception.CustomException;
+import likelion.lionboys.global.infra.s3.exception.error.S3ErrorCode;
 
 public class S3Exception extends CustomException {
 
