@@ -1,10 +1,12 @@
 package likelion.lionboys.global.infra.s3.service;
 
+import com.amazonaws.AmazonServiceException;
 import com.amazonaws.HttpMethod;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import likelion.lionboys.global.infra.s3.dto.PresignedUrlReq;
 import likelion.lionboys.global.infra.s3.dto.PresignedUrlResp;
+import likelion.lionboys.global.infra.s3.exception.S3Exception;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -32,31 +34,42 @@ public class S3Service {
     private Integer downloadExpireDays;
 
     //PUT용 Presigned URL 생성(업로드용)
-    public PresignedUrlResp generateUrl(PresignedUrlReq req) {
-
-
+    public PresignedUrlResp generatePutUrl(PresignedUrlReq req) {
 
         Date expiration = calculateExpiration(uploadExpireMinutes);
-        String s3Key = buildS3Key(1L);
-       GeneratePresignedUrlRequest presignedUrlReq =
-                new GeneratePresignedUrlRequest(bucket, s3Key)
-                        .withMethod(HttpMethod.PUT)
-                        .withExpiration(expiration)
-                        .withContentType(req.contentType());
+        String s3Key = buildS3Key(req.roundId());
 
-        URL url = s3Client.generatePresignedUrl(presignedUrlReq);
+        try {
 
-        return PresignedUrlResp.of(
-                url.toString(),
-                null,
-                HttpMethod.PUT.toString(),
-                s3Key
-                );
+            GeneratePresignedUrlRequest presignedUrlReq =
+                    new GeneratePresignedUrlRequest(bucket, s3Key)
+                            .withMethod(HttpMethod.PUT)
+                            .withExpiration(expiration)
+                            .withContentType(req.contentType());
+
+            URL url = s3Client.generatePresignedUrl(presignedUrlReq);
+
+            return PresignedUrlResp.of(
+                    url.toString(),
+                    null,
+                    HttpMethod.PUT.toString(),
+                    s3Key
+            );
+        } catch (AmazonServiceException e) {
+            if (e.getStatusCode() == 403) throw S3Exception.accessDenied(s3Key);
+            if (e.getStatusCode() == 404) throw S3Exception.bucketAccessDenied(bucket);
+
+            throw S3Exception.uploadFailed(s3Key, e);
+        } catch (Exception e) {
+            throw S3Exception.presignedUrlGenerationFailed(s3Key, e);
+        }
     }
 
 
 
-    // -------------------- Helper
+
+
+    // ================= Helper ================
 
     /**
      * 만료 시간 계산 (일 단위)
