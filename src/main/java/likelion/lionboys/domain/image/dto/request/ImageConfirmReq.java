@@ -21,8 +21,6 @@ public record ImageConfirmReq(
             @NotNull(message = "업로드 결과는 필수입니다")
             Boolean uploadSuccess,
 
-            Long actualFileSize,
-
             String errorMessage
     ) {}
 }
