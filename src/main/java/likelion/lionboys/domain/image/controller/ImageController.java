@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Image API", description = "회식 사진 업로드 및 조회 API")
-@RequestMapping("/api/images")
+@RequestMapping("/api/v1/images")
 @RequiredArgsConstructor
 @RestController
 public class ImageController {
@@ -26,8 +26,9 @@ public class ImageController {
             summary = "이미지 업로드 PresignedUrl 발급" +
             "발급받은 URL로 클라이언트가 직접 S3에 업로드한 후, confirm API를 호출해야 합니다."
     )
-    @GetMapping("/presigned-url")
-    public ApiResponse<PresignedUrlResp> getImagePresignedUrls(PresignedUrlReq req) {
+    @PostMapping("/presigned-url")
+    public ApiResponse<PresignedUrlResp> getImagePresignedUrls(
+            @RequestBody @Valid PresignedUrlReq req) {
         return ApiResponse.success(imageService.getPutUrls(req));
     }
 
@@ -49,7 +50,7 @@ public class ImageController {
             description = "특정 회식(Round)의 업로드된 이미지들의 다운로드 URL을 조회합니다. " +
                     "반환된 Presigned URL은 10분간 유효합니다."
     )
-    @GetMapping
+    @PostMapping
     public ApiResponse<ImageGetResp> getDownloadUrls(
 
             @RequestBody ImageGetReq req

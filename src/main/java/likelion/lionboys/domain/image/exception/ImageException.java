@@ -24,4 +24,11 @@ public class ImageException extends CustomException {
                 "해당 타입(" + extention + ")은 잘못된 이미지 타입입니댜."
         );
     }
+
+    public static ImageException invalidMimeType(String mimeType) {
+        return new ImageException(
+                ImageErrorCode.INVALID_IMAGE_TYPE, // (에러 코드 예시)
+                "지원하지 않는 MIME 타입입니다: " + mimeType
+        );
+    }
 }

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.net.URL;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
@@ -35,17 +36,17 @@ public class S3Service {
      * PUT용 Presigned URL 생성
      *
      * @param s3Key 이미 생성된 S3 객체 키 (e.g., "images/2025/11/15/1/uuid.jpg")
-     * @param contentType MIME 타입 (e.g., "image/jpeg")
+     * @param mimeType MIME 타입 (e.g., "image/jpeg")
      * @return Presigned URL 정보
      */
-    public S3PresignedUrl generatePutUrl(String s3Key, String contentType) {
+    public S3PresignedUrl generatePutUrl(String s3Key, String mimeType) {
 
         try {
             GeneratePresignedUrlRequest req =
                     new GeneratePresignedUrlRequest(bucket, s3Key)
                     .withMethod(HttpMethod.PUT)
                     .withExpiration(calculateExpirationInDate(expireMinutes))
-                    .withContentType(contentType);
+                    .withContentType(mimeType);
 
             URL url = s3Client.generatePresignedUrl(req);
 
@@ -150,6 +151,10 @@ public class S3Service {
      * 우리 DTO용 만료 시간 (LocalDateTime 타입)
      */
     private LocalDateTime calculateExpirationInDateTime(int minutes) {
-        return LocalDateTime.from(Instant.now().plus(minutes, ChronoUnit.MINUTES));
+
+        return LocalDateTime.ofInstant(
+                Instant.now().plus(minutes, ChronoUnit.MINUTES),
+                ZoneId.of("Asia/Seoul")
+        );
     }
 }

@@ -17,10 +17,10 @@ public record PresignedUrlReq(
     public record ImageUploadInfo(
             @NotBlank(message = "Content-Type은 필수입니다")
             @Pattern(
-                    regexp = "image/(jpeg|jpg|png|gif|webp|heic)",
+                    regexp = "^image/(jpeg|jpg|png)$", // "image/jpeg", "image/jpg", "image/png"만 허용
                     message = "지원하지 않는 이미지 형식입니다"
             )
-            String contentType,  // "image/jpeg"
+            String contentType, // ⬅️ "image/jpeg" 같은 문자열을 받음
 
             @NotNull(message = "파일 크기는 필수입니다")
             @Min(value = 1, message = "파일 크기는 1바이트 이상이어야 합니다")

@@ -46,12 +46,17 @@ public class ImageService {
                 .orElseThrow(() -> new EntityNotFoundException("Round not found with id: " + req.roundId()));
         // 이후 RoundException으로 교체할 예정
 
+        // contentType이 유효한지 검증 한번 해야함
+
         List<PresignedUrlResp.PresignedUrlInfo> urlInfos = req.images().stream()
                 .map(uploadInfo -> {
 
+                    // Enum으로 변환 (이 과정에서 "image/jpeg"가 유효한지 검증됨)
+                    ContentType type = ContentType.fromMimeType(uploadInfo.contentType());
+
                     String s3Key = buildS3Key(
                             round.getId(),
-                            uploadInfo.contentType()
+                            type.getExtension() // 여기서는 extension이 필요함!
                     );
 
                     Image pendingImage = Image.createPending(
@@ -66,7 +71,7 @@ public class ImageService {
 
                     S3PresignedUrl s3Url = s3Service.generatePutUrl(
                             s3Key,
-                            uploadInfo.contentType()
+                            uploadInfo.contentType() // 여기서는 mimeType
                     );
 
                     log.info("Presigned URL 발급 완료: imageId={}, s3Key={}, originalFileName={}",
@@ -89,12 +94,8 @@ public class ImageService {
     @Transactional
     public ImageConfirmResp confirm(ImageConfirmReq req) {
 
-        Round round = roundRepository.findById(req.roundId())
-                .orElseThrow(() -> new EntityNotFoundException("Round not found with id: " + req.roundId()));
-        // 이후 RoundException으로 교체할 예정
-
         List<ImageConfirmResp.ImageConfirmResult> results = req.images().stream()
-                .map(confirmInfo -> processConfirm(confirmInfo))
+                .map(this::processConfirm)
                 .toList();
 
         return ImageConfirmResp.of(results);

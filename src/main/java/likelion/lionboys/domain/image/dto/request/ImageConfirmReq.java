@@ -6,8 +6,6 @@ import jakarta.validation.constraints.*;
 import java.util.List;
 
 public record ImageConfirmReq(
-        @NotNull(message = "roundId는 필수입니다")
-        Long roundId,
 
         @NotEmpty(message = "확인할 이미지 정보가 필요합니다")
         @Valid
