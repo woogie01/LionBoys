@@ -20,4 +20,6 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
 
     // 완료된 이미지만 조회(최신순)
     List<Image> findByUploadStatusOrderByRegDateDesc(UploadStatus status);
+
+    List<Image> findByRound_IdAndUploadStatus(Long roundId, UploadStatus status);
 }
