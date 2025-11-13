@@ -1,4 +1,4 @@
-package likelion.lionboys.global.infra.s3.dto;
+package likelion.lionboys.domain.image.dto.request;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
@@ -17,7 +17,7 @@ public record PresignedUrlReq(
     public record ImageUploadInfo(
             @NotBlank(message = "Content-Type은 필수입니다")
             @Pattern(
-                    regexp = "image/(jpeg|jpg|png)",
+                    regexp = "image/(jpeg|jpg|png|gif|webp|heic)",
                     message = "지원하지 않는 이미지 형식입니다"
             )
             String contentType,  // "image/jpeg"
