@@ -1,5 +1,6 @@
 package likelion.lionboys.global.infra.s3.exception;
 
+import com.amazonaws.AmazonServiceException;
 import likelion.lionboys.global.exception.CustomException;
 import likelion.lionboys.global.infra.s3.exception.error.S3ErrorCode;
 
@@ -37,7 +38,7 @@ public class S3Exception extends CustomException {
 
     /**
      * S3 다운로드 실패
-     */
+      */
     public static S3Exception downloadFailed(String s3Key, Throwable cause) {
         return new S3Exception(
                 S3ErrorCode.S3_DOWNLOAD_FAILED,
@@ -125,4 +126,12 @@ public class S3Exception extends CustomException {
                 String.format("지원하지 않는 파일 형식입니다: %s", contentType)
         );
     }
+
+    public static S3Exception metadataFetchFailed(String s3Key, AmazonServiceException e) {
+        return new S3Exception(
+                S3ErrorCode.S3_METADATA_RETRIEVAL_FAILED,
+                String.format("메타데이터를 찾을 수 없습니다. s3Key: %s", s3Key)
+        );
+    }
+
 }

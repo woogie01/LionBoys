@@ -9,7 +9,8 @@ public enum ImageErrorCode implements ErrorCode {
 
     IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "IMG404", "이미지가 존재하지 않습니다"),
     IMAGE_UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "IMG500", "이미지 업로드에 실패했습니다"),
-    INVALID_IMAGE_TYPE(HttpStatus.BAD_REQUEST, "IMG400", "지원하지 않는 이미지 형식입니다");
+    INVALID_IMAGE_TYPE(HttpStatus.BAD_REQUEST, "IMG400", "지원하지 않는 이미지 형식입니다"),
+    INVALID_STATUS(HttpStatus.BAD_REQUEST, "IMG400", "PENDING 상태에서만 처리 가능");
 
     private final HttpStatus status;
     private final String code;
