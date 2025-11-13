@@ -41,7 +41,6 @@ public class ImageController {
     public ApiResponse<ImageConfirmResp> confirmUpload(
             @RequestBody @Valid ImageConfirmReq req
     ) {
-        imageService.confirm(req);
         return ApiResponse.success(imageService.confirm(req));
     }
 
