@@ -1,6 +1,7 @@
 package likelion.lionboys.domain.round;
 
 import jakarta.persistence.*;
+import likelion.lionboys.domain.participant.Participant;
 import likelion.lionboys.domain.party.Party;
 import lombok.*;
 
@@ -37,8 +38,14 @@ public class Round {
     @Column(length = 16, nullable = false)
     private RoundStatus status = RoundStatus.DRAFT;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "secretary_id", foreignKey = @ForeignKey(name = "fk_round_secretary"))
+    private Participant secretary;
+
     @Column(precision = 13, scale = 2)
     @Builder.Default
     private BigDecimal totalAmount = BigDecimal.valueOf(0);
+
+    public void registerSecretary(Participant p){ this.secretary = p; }
 
 }

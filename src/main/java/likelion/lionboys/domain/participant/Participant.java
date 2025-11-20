@@ -1,4 +1,4 @@
-package likelion.lionboys.domain.Participant;
+package likelion.lionboys.domain.participant;
 
 import jakarta.persistence.*;
 import likelion.lionboys.domain.common.BaseTimeEntity;
@@ -32,5 +32,14 @@ public class Participant extends BaseTimeEntity {
 
     @Column(length = 30, nullable = false)
     private String phone;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 16, nullable = false)
+    @Builder.Default
+    private Role role = Role.MEMBER;
+
+    public void updateRole(Role role) {
+        this.role = role;
+    }
 
 }
